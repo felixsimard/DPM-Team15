@@ -9,7 +9,7 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
 
-/*
+/**
  * Class which holds all the methods to perform light localization at a given location.
  */
 public class LightLocalization {

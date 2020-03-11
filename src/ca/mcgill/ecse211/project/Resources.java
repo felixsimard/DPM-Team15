@@ -11,19 +11,25 @@ import lejos.hardware.sensor.SensorMode;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
 
-/**
+/***
  * This class is used to define static resources in one place for easy access and to avoid
  * cluttering the rest of the codebase. All resources can be imported at once like this:
  * 
  * <p>{@code import static ca.mcgill.ecse211.lab3.Resources.*;}
  */
 public class Resources {
-
-  public static final EV3ColorSensor colourSensor1 = new EV3ColorSensor(SensorPort.S3); // left
-  public static final EV3ColorSensor colourSensor2 = new EV3ColorSensor(SensorPort.S4); // right
-  /*
+  
+ /**
+  *  Left Motor
+  */
+  public static final EV3ColorSensor colourSensor1 = new EV3ColorSensor(SensorPort.S3);
+  /**
+   * Right Motor
+   */
+  public static final EV3ColorSensor colourSensor2 = new EV3ColorSensor(SensorPort.S4);
+  
+  /**
    * Ideal RGB values for the big and small rooms 
-   * 
    */
   public static final int[] BIG_ROOM_BLUE = {23, 80, 96};
   public static final int[] BIG_ROOM_YELLOW = {167, 81, 30}; // 213, 115, 28
@@ -39,8 +45,8 @@ public class Resources {
   public static final int[] SMALL_ROOM_BLACK = {36, 28, 33};
 
 
-  /*
-   * Standard deviations values for each color, for each rom
+  /**
+   * Standard deviations values for each color, for each room
    */
   public static final int SD_BIG_BLUE = 10;
   public static final int SD_BIG_YELLOW = 10;
@@ -53,17 +59,17 @@ public class Resources {
   public static final int SD_SMALL_ORANGE = 10;
 
 
-  /*
+  /**
    * Color Sensor Distance Threshold: used to determine the color being detected in ColorSensor.java
    */
   public static final int COLOR_DISTANCE_THRESHOLD = 25;
 
-  /*
+  /**
    * Define the room type in which the lab is performed.
    */
   public static final String CURRENT_ROOM = "SMALL";
 
-  /*
+  /**
    * Color names array
    */
   public static final String[] COLOR_NAMES = {"BLUE", "ORANGE", "YELLOW", "GREEN", "BLACK"};
@@ -78,7 +84,9 @@ public class Resources {
    */
   public static final int NINETY_DEGREES = 90;
 
-  /** Period of sampling f (ms). */
+  /** 
+   * Period of sampling f (ms). 
+   */
   public static final int SAMPLING_INTERVAL_US = 25;       
 
   /** Period of display update (ms). */
@@ -88,9 +96,20 @@ public class Resources {
    * Time for which the method that returns the colour calculated by the colour sensor sleeps for (ms)
    */
   public static final int COLOUR_SENSOR_SLEEP = 50;
-
+  
+  /*
+   * A 360 degree angle.
+   */
   public static final int DEGREES_MAX = 360;
+  
+  /**
+   * A 90 degree (right angle).
+   */
   public static final int RIGHT_ANGLE = 90;
+  
+  /**
+   * A 45 degree angle.
+   */
   public static final int HALF_RIGHT_ANGLE = 45;
 
   /**
@@ -99,9 +118,10 @@ public class Resources {
   public static final int SENSOR_TO_CENTER_DIST = 7;
 
   /**
-   * PI
+   * PI constant.
    */
-  public static final double PI=3.1415927; 
+  public static final double PI = 3.1415927; 
+  
   /**
    * The ultrasonic sensor.
    */
@@ -117,7 +137,7 @@ public class Resources {
    */
   public static final int POLL_SLEEP_TIME = 35; 
 
-  /*
+  /**
    * Distance from color sensor to wheel center of robot.
    */
   public static final int COLOR_SENSOR_TO_CENTER_DIST = 6;
@@ -132,7 +152,7 @@ public class Resources {
    */
   public static final int D = 35;
 
-  /*
+  /**
    * Absorbance threshold.
    */
   public static final int ABSORBANCE_THRESHOLD = 20;
@@ -142,7 +162,7 @@ public class Resources {
    */
   public static final double WHEEL_RADIUS = 2.13; // 2.098
 
-  /*
+  /**
    * Wheel radius to be used by the odometer.
    */
   public static final double WHEEL_RADIUS_ODO = 2.37;
@@ -177,12 +197,12 @@ public class Resources {
    */
   public static final int DIST_THRESHOLD = 30;
 
-  /*
+  /**
    * Black line threshold (for big room).
    */
   public static final int BLACK_LINE_THRESHOLD = 45;
 
-  /*
+  /**
    * Blue line threshold (for small room).
    */
   public static final int BLUE_LINE_THRESHOLD_L = 30;
@@ -202,6 +222,7 @@ public class Resources {
    * The tile size in centimeters. Note that 30.48 cm = 1 ft.
    */
   public static final double TILE_SIZE_cm = 30.48;
+  
   /**
    * Number of degrees in one radian, equivalent approximately to 180/Math.PI.(used to convert to degrees)
    */
@@ -212,28 +233,28 @@ public class Resources {
    */
   public static final double RADS_PER_1DEG=0.01745329251;                 //new
 
-  /*
+  /**
    * Next waypoint coordinates
    */
   public static int NEXT_X;
   public static int NEXT_Y;
 
-  /*
+  /**
    * Global flag to that keeps track of whether or not we have detected a ring.
    */
   public static boolean HAS_DETECTED_OBJECT = false;
 
-  /* 
+  /** 
    * To keep track of the number of rings detected.
    */
   public static int NUM_RINGS_DETECTED = 0;
 
-  /*
+  /**
    * To keep track of the rings color detected.
    */
   public static String RINGS_DETECTED_STRING = "";
 
-  /*
+  /**
    * To know when first corner localization is done.
    */
   public static boolean DONE_CORNER_LOCALIZATION = false;
@@ -259,7 +280,7 @@ public class Resources {
   public static Odometer odometer = Odometer.getOdometer();
 
 
-  /*   
+  /**   
    * For Threads
    */
   public static ColorSensor cSensor = new ColorSensor();

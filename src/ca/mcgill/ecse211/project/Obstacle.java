@@ -1,6 +1,6 @@
 package ca.mcgill.ecse211.project;
 
-/*
+/**
  * 
  * Class to hold all the methods required for identify an approaching obstacle, 
  * identify if that object is an actual obstacle, another EV3 robot, or the stranded vehicle.
@@ -12,7 +12,7 @@ public class Obstacle {
 
   // for obstacle avoidance and obstacle identification
 
-  /*
+  /**
    * Returns true when robot approaches an object/obstacle.
    * 
    * @param distance    the distance value read by the US sensor
@@ -22,7 +22,7 @@ public class Obstacle {
     return true;
   }
   
-  /*
+  /**
    * Method to actually avoid an obstacle.
    * Basic logic implemented to avoid based on stopping and sharp turn right.
    */
@@ -30,7 +30,7 @@ public class Obstacle {
     
   }
   
-  /*
+  /**
    * Method to identify/differentiate the object/obstacle facing the robot.
    * 
    * @param readings   an array of integers recorded a US sensor left-right sweep of the obstacle

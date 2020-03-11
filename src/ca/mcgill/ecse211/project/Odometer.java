@@ -6,6 +6,11 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 
+ * Class to handle the odometer methods. Keeping track of x, y and angle displacement/values of robot throughout its navigation.
+ *
+ */
 public class Odometer extends Thread implements Runnable {
 
   /**

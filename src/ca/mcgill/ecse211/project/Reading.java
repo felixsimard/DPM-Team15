@@ -2,7 +2,7 @@ package ca.mcgill.ecse211.project;
 
 import java.util.ArrayList;
 
-/*
+/**
  * Class to hold a basic value object coming from the US sensor.
  * We record the distance read by the US sensor and the offset angle from the initial orientation at which the distance was
  * recorded.

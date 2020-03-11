@@ -5,7 +5,7 @@ import lejos.robotics.SampleProvider;
 import static ca.mcgill.ecse211.project.Resources.*;
 import ca.mcgill.ecse211.project.Main.*;
 
-/*
+/**
  * Class to hold all methods related to reading RGB color values from light sensor and determining the String representation of the color.
  */
 public class ColorSensor extends Thread {
@@ -43,7 +43,7 @@ public class ColorSensor extends Thread {
   //--------------------------------------------------------------------------
 
 
-  /*
+  /**
    * Method which will read from the light/color sensor and prints out String color name.
    * 
    * @return  a String representing the color identified by the color detection algrithm.
@@ -84,7 +84,7 @@ public class ColorSensor extends Thread {
 
   }
 
-  /*
+  /**
    * Method to return the String color name given an RGB reading and the location type.
    * 
    * 
@@ -113,7 +113,7 @@ public class ColorSensor extends Thread {
 
   }
 
-  /*
+  /**
    * Returns array of distances for each R,G,B for a provided sample color reading.
    * Needs to have location type specified ie: 'BIG' or 'SMALL' lab room
    */
@@ -239,7 +239,7 @@ public class ColorSensor extends Thread {
 
   }
 
-  /*
+  /**
    * Method return an array containing the RGB reading from the color sensor.
    */
   public static float[] getRGBdata() {

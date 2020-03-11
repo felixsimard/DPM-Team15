@@ -10,7 +10,7 @@ import static ca.mcgill.ecse211.project.Resources.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/*
+/**
  * Class to manage and record values of the ultrasonic sensor.
  */
 public class UltrasonicSensor extends Thread {
@@ -20,7 +20,7 @@ public class UltrasonicSensor extends Thread {
    */
   private static int distance;     
 
-  /*
+  /**
    *  ArrayList to store all the readings object
    */
   public static  ArrayList<Reading> readings = new ArrayList<Reading>();
@@ -65,19 +65,29 @@ public class UltrasonicSensor extends Thread {
    */
   private static double deltaTheta;               
 
-  // instantiate ColorSensor object
+  /**
+   * Instantiate ColorSensor object
+   */
   private ColorSensor colorSensor = new ColorSensor();
 
-  // to hold the x, y, t values of the odometer
+  /**
+   * To hold the x, y, t values of the odometer
+   */
   private double[] position;
 
-  // offset angle, values between 0-359
+  /**
+   * ffset angle, values between 0-359
+   */
   private double deltaAngle;
 
-  // cummulative offset angle, values from 0-inf (used for US localization)
+  /**
+   * Cummulative offset angle, values from 0-inf (used for US localization)
+   */
   private double totalDeltaAngle;
 
-  // Reading object which will store the minimum distance and the offset angle associated to it
+  /**
+   * Reading object which will store the minimum distance and the offset angle associated to it
+   */
   private Reading minReading;
 
 
@@ -87,7 +97,7 @@ public class UltrasonicSensor extends Thread {
   public UltrasonicSensor() {
   }
 
-  /*
+  /**
    * Main run method.
    */
   public void run() {
@@ -109,7 +119,7 @@ public class UltrasonicSensor extends Thread {
 
   } 
 
-  /*
+  /**
    * Method to continuously check if our US sensor detects an object.
    */
   public void detectObject() {
@@ -422,7 +432,7 @@ public class UltrasonicSensor extends Thread {
     // We should be all good at this point!
   }
 
-  /*
+  /**
    * Method to perform a 360 degrees sweep and record each distance readings in a Reading.java object.
    * Used in the usLocalize() method.
    */
@@ -462,7 +472,7 @@ public class UltrasonicSensor extends Thread {
     return hyp;
   }
 
-  /*
+  /**
    * Method to find the minimum reading out of the arraylist of Reading objects.
    * Idea is simply to sort the arraylist by distance attribute and then pick the first element in the list.
    */

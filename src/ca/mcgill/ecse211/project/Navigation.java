@@ -4,6 +4,9 @@ import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import static ca.mcgill.ecse211.project.Main.sleepFor;
 
+/**
+ * Class to handle basic navigation methods and navigating between waypoints.
+ */
 public class Navigation extends Thread {
 
   //private UltrasonicSensor usSensor = new UltrasonicSensor();
@@ -46,16 +49,9 @@ public class Navigation extends Thread {
    */
   double distance_needed_to_cover;  
 
-  /*
-   * Maps
+  /**
+   * Main run method of the navigation class.
    */
-  int[][] map0 = {{1, 3}, {2, 2}, {2, 3}, {3, 2}, {3, 1}};
-  int[][] map1 = {{1, 7}, {3, 4}, {7, 7}, {7, 4}, {4, 1}};
-  int[][] map2 = {{5, 4}, {1, 7}, {7, 7}, {7, 4}, {4, 1}};
-  int[][] map3 = {{3, 1}, {7, 4}, {7, 7}, {1, 7}, {1, 4}};
-  int[][] map4 = {{1, 4}, {3, 7}, {3, 1}, {7, 4}, {7, 7}};
-  int[][] map5 = {{1, 3}, {3, 3}, {4, 1}};
-
   public void run( ) {
 
     // Main run method
@@ -63,7 +59,6 @@ public class Navigation extends Thread {
 
   }
 
-  //----------------------------------------------------------------------------------------------------
   /**
    * This method takes as input the angle we wish to turn to, it then turns the EV3 to our desired angle
    * @param angle_RAD
@@ -240,12 +235,28 @@ public class Navigation extends Thread {
     leftMotor.rotate(convertAngle(angle), true);
     rightMotor.rotate(-convertAngle(angle), false);
   }
+  
+  /**
+   * Convert angle to distance.
+   * @param angle
+   * @return
+   */
   public static int convertAngle(double angle) {
     return convertDistance(Math.PI * BASE_WIDTH * angle / 360.0);
   }
+  /**
+   * Convert distance to angle.
+   * @param distance
+   * @return
+   */
   public static int convertDistance(double distance) {
     return (int) ((180.0 * distance) / (Math.PI * WHEEL_RADIUS));
   }
+  
+  /**
+   * Helper wrapper method to properly make the robot rotate by a certain angle.
+   * @param angle
+   */
   public void rotateRobotBy(double angle) {
     leftMotor.setSpeed(MOTOR_LOW);
     rightMotor.setSpeed(MOTOR_LOW);
