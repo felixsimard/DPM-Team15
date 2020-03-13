@@ -7,10 +7,16 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * The odometer class keeps track of the robot's (x, y, theta) position.
  * 
- * Class to handle the odometer methods. Keeping track of x, y and angle displacement/values of robot throughout its navigation.
- *
+ * @author Rodrigo Silva
+ * @author Dirk Dubois
+ * @author Derek Yu
+ * @author Karim El-Baba
+ * @author Michael Smith
+ * @author Younes Boubekeur
  */
+
 public class Odometer extends Thread implements Runnable {
 
   /**
@@ -27,12 +33,7 @@ public class Odometer extends Thread implements Runnable {
    * The orientation in degrees.
    */
   public volatile double theta; // Head angle
-
-  /*
-   * The total summed up angle displacement
-   */
-  private volatile double totalTheta;
-
+  
 
 
   /**
@@ -65,7 +66,7 @@ public class Odometer extends Thread implements Runnable {
   /**
    * The odometer update period in ms.
    */ 
-
+ 
   private static final long ODOMETER_PERIOD = 25;
 
 
@@ -77,7 +78,7 @@ public class Odometer extends Thread implements Runnable {
     setXyt(15.24, 15.24, 0);
     lastTachoL = leftMotor.getTachoCount();                
     lastTachoR = rightMotor.getTachoCount();               
-
+    
   }
 
 
@@ -105,7 +106,7 @@ public class Odometer extends Thread implements Runnable {
     while (true) {
       tempTheta = odo.getXyt()[2] * (Math.PI/180);
       updateStart = System.currentTimeMillis();
-
+         
       int nowTachoL = leftMotor.getTachoCount(); // get tacho counts
       int nowTachoR = rightMotor.getTachoCount();
       // compute L and R wheel displacements
@@ -116,16 +117,16 @@ public class Odometer extends Thread implements Runnable {
       double deltaD = 0.5 * (distL + distR); // compute vehicle displacement
       double deltaT = (distL - distR) / BASE_WIDTH; // compute change in heading
       tempTheta = tempTheta +  deltaT;            
-
+      
       double dX = deltaD * Math.sin(tempTheta); // compute x component of displacement
       double dY = deltaD * Math.cos(tempTheta); // compute y component of displacement
 
-      odo.update(dX,dY,deltaT * (180/Math.PI));          
-
-      // this ensures that the odometer only runs once every period
-      updateDuration = System.currentTimeMillis() - updateStart;
-      if (updateDuration < ODOMETER_PERIOD) {
-        sleepFor(ODOMETER_PERIOD - updateDuration);            
+       odo.update(dX,dY,deltaT * (180/Math.PI));          
+     
+    // this ensures that the odometer only runs once every period
+    updateDuration = System.currentTimeMillis() - updateStart;
+    if (updateDuration < ODOMETER_PERIOD) {
+      sleepFor(ODOMETER_PERIOD - updateDuration);            
       }
     }           //end of while loop
   } // end of run method
@@ -142,7 +143,7 @@ public class Odometer extends Thread implements Runnable {
    * @return the odometer data.
    */
   public double[] getXyt() {
-    double[] position = new double[4];
+    double[] position = new double[3];
     lock.lock();
     try {
       while (isResetting) { // If a reset operation is being executed, wait until it is over.
@@ -152,7 +153,6 @@ public class Odometer extends Thread implements Runnable {
       position[0] = x;
       position[1] = y;
       position[2] = theta;
-      position[3] = totalTheta;
     } catch (InterruptedException e) {
       e.printStackTrace();
     } finally {
@@ -176,7 +176,6 @@ public class Odometer extends Thread implements Runnable {
       x += dx;
       y += dy;
       theta = (theta + (360 + dtheta) % 360) % 360;
-      totalTheta += dtheta;
       isResetting = false;
       doneResetting.signalAll(); // Let the other threads know we are done resetting
     } finally {
@@ -257,10 +256,10 @@ public class Odometer extends Thread implements Runnable {
     }
   }
   public void resetOdo() {
-    Main.sleepFor(40);
+   Main.sleepFor(40);
     lock.lock();
-    odometer.setTheta(0);
-    lock.unlock(); 
+   odometer.setTheta(0);
+   lock.unlock(); 
   }
 
 }
