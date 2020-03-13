@@ -55,7 +55,14 @@ public class Navigation extends Thread {
   public void run( ) {
 
     // Main run method
-
+ 
+      travelTo(0,2); 
+      System.out.println("x:"+odometer.getXyt()[0]);
+      System.out.println("y:"+odometer.getXyt()[1]);
+      System.out.println("theta:"+odometer.getXyt()[2]);
+      stopMotors();
+      
+    
 
   }
 

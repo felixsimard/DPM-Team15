@@ -23,11 +23,9 @@ public class Main {
 
     //START THREADS
     odometerThread.start(); 
-    leftMotor.setSpeed(MOTOR_LOW);
-    rightMotor.setSpeed(MOTOR_LOW);
-    leftMotor.rotate(360);
-    rightMotor.rotate(360);
-    Testing.test("OdoRotAccuracy");
+    navigationThread.start();
+    odometer.setXyt(0, 0, 0);
+   
     
     //CALL TEST METHOD 
     //------------------------------------TESTING END-------------------------------------//

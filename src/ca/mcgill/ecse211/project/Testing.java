@@ -182,9 +182,9 @@ public class Testing {
       while(testIndex < numOfReadings) {
       
         System.out.println(odometer.getXyt()[2]);
+
         
-        
-      testData[testIndex] = (testIndex+1) + ", " + odometer.getXyt()[2] + ", " +odometer.getXyt()[3];
+      testData[testIndex] = (testIndex+1) + ", " + odometer.getXyt()[2];
       try {
         Thread.sleep(timeBtwReadings);
       } catch (InterruptedException e) {
@@ -206,8 +206,7 @@ public class Testing {
         csvWriter.append("Sample number");
         csvWriter.append(", ");
         csvWriter.append("Heading (deg)");
-        csvWriter.append(", ");
-        csvWriter.append("Total Heading (deg)");
+        
         csvWriter.newLine();
         
         for ( String data : testData) {
@@ -223,16 +222,18 @@ public class Testing {
    }
     }
   //---------------------TEST FOR US LOCALIZATION ---------------//
-    else if (test.equals("USLocalization")) {
+    else if (test.equals("USLocalization & odoAccuracy")) {
       int testIndex = 0;  
       while(testIndex < 10) {
         
-
-        TEXT_LCD.drawString("Calibration #"+testIndex, 0, 0);
+        
+        TEXT_LCD.drawString("Trial #"+testIndex, 0, 0);
         TEXT_LCD.drawString("Press btn to calibrate.", 0, 1);
         Button.waitForAnyPress();
         TEXT_LCD.clear();
- 
+        
+       
+       
         
 
         
@@ -247,7 +248,7 @@ public class Testing {
       testIndex++;
         
       }
-      file = createfile("usLocalization.csv");
+      file = createfile("usLocalization & odoAccuracy.csv");
       try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(file))) {
             if (! file.exists()) {
                 file.createNewFile();
