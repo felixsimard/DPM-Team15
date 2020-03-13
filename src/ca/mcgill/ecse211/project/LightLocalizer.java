@@ -55,8 +55,10 @@ public static void getSample_localize() {
 //-----------------------------------------------------------------------------------------------------------------------
 public static void localizeDuringUltrasonicLocalization() {
   
-    line_threshold_L = BLACK_LINE_THRESHOLD;            //Big room
-    line_threshold_R = BLACK_LINE_THRESHOLD;            //Big room
+//    line_threshold_L = BLACK_LINE_THRESHOLD;            //Big room
+//    line_threshold_R = BLACK_LINE_THRESHOLD;            //Big room
+      line_threshold_L = BLUE_LINE_THRESHOLD_L;            //small room
+      line_threshold_R = BLUE_LINE_THRESHOLD_R;            //small room
     
   localize();                       //go straight
   
@@ -68,9 +70,11 @@ public static void localizeDuringUltrasonicLocalization() {
 }
 //-----------------------------------------------------------------------------------------------------------------------
 public static void localizeDuringNavigation() {
-  
-  line_threshold_L = BLACK_LINE_THRESHOLD;            //Big room
-  line_threshold_R = BLACK_LINE_THRESHOLD;            //Big room
+//  
+//  line_threshold_L = BLACK_LINE_THRESHOLD;            //Big room
+//  line_threshold_R = BLACK_LINE_THRESHOLD;            //Big room
+  line_threshold_L = BLUE_LINE_THRESHOLD_L;            //small room
+  line_threshold_R = BLUE_LINE_THRESHOLD_R;            //small room
 
   //turn to 0
   //........ (Done in Navigation class)
@@ -92,30 +96,35 @@ public static void localizeDuringNavigation() {
 
 //-----------------------------------------------------------------------------------------------------------------------
 public static void localize() {
-  if ((LightLocalizer.get_value_of_colour1() <= line_threshold_L) && (LightLocalizer.get_value_of_colour2() <= line_threshold_R)) {       //both light sensors on line already
-    return;
-  }
-  
-  else if (!(LightLocalizer.get_value_of_colour1() <= line_threshold_L) && (LightLocalizer.get_value_of_colour2() <= line_threshold_R)) {  //right sensor on line already
-      while(!(LightLocalizer.get_value_of_colour1() <= line_threshold_L)) { //while the left sensor does not detect a line
-        leftMotor.setSpeed(50);
-        leftMotor.forward();
-      } //end of while loop
-      leftMotor.stop(false); // stop the left motor as the left sensor has detected a line
-      return;
-  } //end of else if
-  
-else if ((LightLocalizer.get_value_of_colour1() <= line_threshold_L) && !(LightLocalizer.get_value_of_colour2() <= line_threshold_R)) {    //left sensor on line already
- while(!(LightLocalizer.get_value_of_colour2() <= line_threshold_R)) { //while the right sensor does not detect a line
-   rightMotor.setSpeed(50);
-   rightMotor.forward();
-     } //end of while loop
- rightMotor.stop(false); //stop the right motor as the right sensor has detected a line
- return;
- } //end of else if
-
-//--------------------------------------------------------------------------------------------------------------------------------------------    
-else {   
+    
+//  if ((LightLocalizer.get_value_of_colour1() <= line_threshold_L) && (LightLocalizer.get_value_of_colour2() <= line_threshold_R)) {       //both light sensors on line already
+//    return;
+//  }
+//  
+//  else if (!(LightLocalizer.get_value_of_colour1() <= line_threshold_L) && (LightLocalizer.get_value_of_colour2() <= line_threshold_R)) {  //right sensor on line already
+////    leftMotor.setSpeed(50);
+////    leftMotor.rotate(-50,false);
+//    while(!(LightLocalizer.get_value_of_colour1() <= line_threshold_L)) { //while the left sensor does not detect a line
+//        leftMotor.setSpeed(50);
+//        leftMotor.forward();
+//      } //end of while loop
+//      leftMotor.stop(false); // stop the left motor as the left sensor has detected a line
+//      return;
+//  } //end of else if
+//  
+//else if ((LightLocalizer.get_value_of_colour1() <= line_threshold_L) && !(LightLocalizer.get_value_of_colour2() <= line_threshold_R)) {    //left sensor on line already
+////  rightMotor.setSpeed(50);
+////  rightMotor.rotate(-50,false);
+//  while(!(LightLocalizer.get_value_of_colour2() <= line_threshold_R)) { //while the right sensor does not detect a line
+//   rightMotor.setSpeed(50);
+//   rightMotor.forward();
+//     } //end of while loop
+// rightMotor.stop(false); //stop the right motor as the right sensor has detected a line
+// return;
+// } //end of else if
+//
+////--------------------------------------------------------------------------------------------------------------------------------------------    
+//else {   
  /*
   * neither sensors detect a line initially
   */
@@ -166,7 +175,7 @@ else {
    return;
  } //end of else if
        
-} //end of else
+//} //end of else
 } //end of localize method
 //-----------------------------------------------------------------------------------------------------------------------
 public static float get_value_of_colour1() {

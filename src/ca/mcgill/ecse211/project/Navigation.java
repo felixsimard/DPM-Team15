@@ -51,15 +51,15 @@ public class Navigation {
   int[][] map0 = {{1, 3}, {2, 2}, {3, 3}, {3, 2}, {3, 1}};
   int[][] chosenMap;
   
-  int corner = 0;
+  int corner = 3;
   int ZoneLLx = 0;
   int ZoneLLy = 0;
   int ZoneURx = 4;
   int ZoneURy = 4;
-  int TunnelLLx = 4;
+  int TunnelLLx = 2;
   int TunnelLLy = 2;
-  int TunnelURx = 6;
-  int TunnelURy = 3;
+  int TunnelURx = 3;
+  int TunnelURy = 4;
   
   int startingX;
   int startingY;
@@ -76,29 +76,51 @@ public class Navigation {
   
 //-----------------------------------------------------------------------------------------------------------------------
   public void run( ) {
-  
-    
+      
     if (corner == 0) {
-      odometer.setXyt(1*TILE_SIZE_cm, 1*TILE_SIZE_cm, 0);
+      
       startingX = 1;
       startingY = 1;
+      odometer.setXyt( startingX*TILE_SIZE_cm, startingY*TILE_SIZE_cm, 0);
       reachedX = 1;
       reachedY = 1;
       if (Math.abs(TunnelURy - TunnelLLy) < Math.abs(TunnelURx - TunnelLLx)) {      //tunnel is horizontal
-        tunnelWidth = (TunnelURy - TunnelLLy) * 30.48;   
+        System.out.println("in horizontal tunnel");
+        tunnelWidth = (TunnelURy - TunnelLLy) * 30.48;
+        if (TunnelLLy == 0) {          //exception case
+          destX = TunnelLLx - 1;
+          destY =  TunnelURy;
+          distX = destX - startingX;
+          distY = destY - startingY; 
+          NavigateXY(); 
+          UltrasonicLocalizer.turnBy(180);
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(-90);
+        }
+        else {
         destX = TunnelLLx - 1;
         destY = TunnelLLy;
         distX = destX - startingX;
-        distY = destY - startingY;
-  //----------------------------------------------------      
-        NavigateXY();
- //------------------------------------------------------------------       
+        distY = destY - startingY;      
+        NavigateXY();       
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(90);
+        }
         
       } //end of horizontal tunnel
-      else {
+      else {                           
         tunnelWidth = (TunnelURx - TunnelLLx) * 30.48;
+        if (TunnelLLx == 0) {   // exception case
+          destX = TunnelURx;
+          destY = TunnelLLy - 1;
+          distX = destX - startingX;
+          distY = destY - startingY;
+          NavigateXY(); 
+          UltrasonicLocalizer.turnBy(-90);
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(90);
+        }
+        else {
         destX = TunnelLLx;
         destY = TunnelLLy - 1;
         distX = destX - startingX;
@@ -107,32 +129,54 @@ public class Navigation {
         UltrasonicLocalizer.turnBy(90);
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(-90);
-        
+        }
       } // end of vertical tunnel
    
     } //end of if(corner == 0)
     
     else  if (corner == 1) {
-      odometer.setXyt(14*TILE_SIZE_cm, 1*TILE_SIZE_cm, 0);
+      
       startingX = 14;
       startingY = 1;
+      odometer.setXyt(startingX*TILE_SIZE_cm, startingY*TILE_SIZE_cm, 0);
       reachedX = 14;
       reachedY = 1;
       if (Math.abs(TunnelURy - TunnelLLy) < Math.abs(TunnelURx - TunnelLLx)) {      //tunnel is horizontal
         tunnelWidth = (TunnelURy - TunnelLLy) * 30.48;   
+        if (TunnelLLy == 0) {  // exception case
+          destX = TunnelURx + 1;
+          destY = TunnelURy;
+          distX = destX - startingX;
+          distY = destY - startingY;  
+          NavigateXY(); 
+          UltrasonicLocalizer.turnBy(180);
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(90);
+        }
+        else {
         destX = TunnelURx + 1;
         destY = TunnelLLy;
         distX = destX - startingX;
-        distY = destY - startingY;
-  //----------------------------------------------------      
-        NavigateXY();
- //------------------------------------------------------------------       
+        distY = destY - startingY;    
+        NavigateXY();      
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(-90);
+        }
         
       } //end of horizontal tunnel
       else {
         tunnelWidth = (TunnelURx - TunnelLLx) * 30.48;
+        if (TunnelURx == 15) {  //exception case
+          destX = TunnelLLx;
+          destY = TunnelLLy - 1;
+          distX = destX - startingX;
+          distY = destY - startingY;
+          NavigateXY();
+          UltrasonicLocalizer.turnBy(90);
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(-90);
+        }
+        else {
         destX = TunnelURx;
         destY = TunnelLLy - 1;
         distX = destX - startingX;
@@ -141,33 +185,55 @@ public class Navigation {
         UltrasonicLocalizer.turnBy(-90);
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(90);
+        }
         
       } // end of vertical tunnel
    
     } //end of if(corner == 1)
     
     else  if (corner == 2) {
-      odometer.setXyt(14*TILE_SIZE_cm, 8*TILE_SIZE_cm, 180);
+      
       startingX = 14;
       startingY = 8;
+      odometer.setXyt(startingX*TILE_SIZE_cm, startingY*TILE_SIZE_cm, 180);
       reachedX = 14;
       reachedY = 8;
       if (Math.abs(TunnelURy - TunnelLLy) < Math.abs(TunnelURx - TunnelLLx)) {      //tunnel is horizontal
         tunnelWidth = (TunnelURy - TunnelLLy) * 30.48;   
+       
+        if (TunnelURy == 9) {           //exception case
+          destX = TunnelURx + 1;
+          destY = TunnelLLy;
+          distX = destX - startingX;
+          distY = destY - startingY;  
+          NavigateXY(); 
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(-90);
+        }
+        else {
         destX = TunnelURx + 1;
         destY = TunnelURy;
         distX = destX - startingX;
-        distY = destY - startingY;
-  //----------------------------------------------------      
-        NavigateXY();
- //------------------------------------------------------------------       
+        distY = destY - startingY;     
+        NavigateXY();    
         UltrasonicLocalizer.turnBy(180);
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(90);
+        }
         
       } //end of horizontal tunnel
       else {
         tunnelWidth = (TunnelURx - TunnelLLx) * 30.48;
+        if (TunnelURx == 15) {      //exception case
+          destX = TunnelLLx;
+          destY = TunnelURy + 1;
+          distX = destX - startingX;
+          distY = destY - startingY;
+          UltrasonicLocalizer.turnBy(90);
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(90);
+        }
+        else {
         destX = TunnelURx;
         destY = TunnelURy + 1;
         distX = destX - startingX;
@@ -176,42 +242,65 @@ public class Navigation {
         UltrasonicLocalizer.turnBy(-90);
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(-90);
-        
+        }   
       } // end of vertical tunnel
    
     } //end of if(corner == 2)
     
     else  if (corner == 3) {
-      odometer.setXyt(1*TILE_SIZE_cm, 8*TILE_SIZE_cm, 180);
+      
       startingX = 1;
       startingY = 8;
+      odometer.setXyt(startingX*TILE_SIZE_cm, startingY*TILE_SIZE_cm, 180);
       reachedX = 1;
       reachedY = 8;
       if (Math.abs(TunnelURy - TunnelLLy) < Math.abs(TunnelURx - TunnelLLx)) {      //tunnel is horizontal
         tunnelWidth = (TunnelURy - TunnelLLy) * 30.48;   
-        destX = TunnelLLx - 1;
+       
+        if (TunnelURy == 9) { //exception case
+          destX = TunnelLLx - 1;
+          destY = TunnelLLy;
+          distX = destX - startingX;
+          distY = destY - startingY; 
+          NavigateXY(); 
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(90);
+        }
+        else {
+        destX = TunnelLLx - 1;          
         destY = TunnelURy;
         distX = destX - startingX;
-        distY = destY - startingY;
-  //----------------------------------------------------      
-        NavigateXY();
- //------------------------------------------------------------------       
+        distY = destY - startingY;      
+        NavigateXY();       
         UltrasonicLocalizer.turnBy(180);
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(-90);
+        }
         
       } //end of horizontal tunnel
       else {
         tunnelWidth = (TunnelURx - TunnelLLx) * 30.48;
-        destX = TunnelLLx;
-        destY = TunnelURy + 1;
-        distX = destX - startingX;
-        distY = destY - startingY;
+       
+        if (TunnelLLx == 0) {     //exception case
+          destX = TunnelURx;
+          destY = TunnelURy + 1;
+          distX = destX - startingX;     
+          distY = destY - startingY;
+          NavigateXY();
+          UltrasonicLocalizer.turnBy(-90);
+          moveStraightFor2(tunnelWidth/2);
+          UltrasonicLocalizer.turnBy(-90);
+        }
+        else {
+        destX = TunnelLLx;         
+        destY = TunnelURy + 1;     
+        distX = destX - startingX;     
+        distY = destY - startingY;   
         NavigateXY();
         UltrasonicLocalizer.turnBy(90);
         moveStraightFor2(tunnelWidth/2);
         UltrasonicLocalizer.turnBy(90);
-        
+        }
       } // end of vertical tunnel
    
     } //end of if(corner == 3)
@@ -387,7 +476,7 @@ public class Navigation {
         else if(displY<0)  displTheta_RAD=PI; //displacement backward
         distance_needed_to_cover =  displY;
         turnTo(displTheta_RAD);
-        moveStraightFor2(distance_needed_to_cover);
+        moveStraightFor2(Math.abs(distance_needed_to_cover));
         if (travelToNotCompleted) {
           completeTravelTo();
         }
@@ -401,7 +490,7 @@ public class Navigation {
       leftMotor.setSpeed(50);
       rightMotor.setSpeed(50);
       turnTo(displTheta_RAD);
-      moveStraightFor2(distance_needed_to_cover);
+      moveStraightFor2(Math.abs(distance_needed_to_cover));
       if (travelToNotCompleted) {
         completeTravelTo();
       }
@@ -464,7 +553,7 @@ public class Navigation {
   public void CompleteLightLocalization_Direction_X() {
   turnTo_LightLocalizer(0);
   LightLocalizer.localizeDuringNavigation();
-  odometer.setXyt(reachedX*TILE_SIZE_cm, 1*TILE_SIZE_cm, 0);
+  odometer.setXyt(reachedX*TILE_SIZE_cm, startingY*TILE_SIZE_cm, 0);
   }
   
   public void CompleteLightLocalization_Direction_Y() {
@@ -478,7 +567,7 @@ public class Navigation {
       // do nothing
     }
     else if (distX == 1) {
-     travelTo(reachedX + 1, 1);
+     travelTo(reachedX + 1, 7);
      reachedX += 1;
      CompleteLightLocalization_Direction_X();
      distX = distX - 1;
@@ -492,7 +581,7 @@ public class Navigation {
     else if ((distX % 2 == 0) && distX > 0) {
       
       while (distX != 0) {
-        travelTo( reachedX + 2, 1);
+        travelTo( reachedX + 2, 7);
         reachedX += 2;
         CompleteLightLocalization_Direction_X();
         distX -= 2;
@@ -503,7 +592,7 @@ public class Navigation {
         tempdistX = distX - 1;
         
         while (tempdistX != 0) {
-          travelTo(reachedX + 2, 1);
+          travelTo(reachedX + 2, 7);
           reachedX += 2;
           CompleteLightLocalization_Direction_X();
           tempdistX -= 2;
@@ -517,7 +606,7 @@ public class Navigation {
     else if ((distX % 2 == 0) && distX < 0) {
       
       while (distX != 0) {
-        travelTo( reachedX - 2, 1);
+        travelTo( reachedX - 2, 7);
         reachedX -= 2;
         CompleteLightLocalization_Direction_X();
         distX += 2;
@@ -528,13 +617,13 @@ public class Navigation {
         tempdistX = distX + 1;
         
         while (tempdistX != 0) {
-          travelTo(reachedX - 2, 1);
+          travelTo(reachedX - 2, 7);
           reachedX -= 2;
           CompleteLightLocalization_Direction_X();
           tempdistX += 2;
         }
         
-        travelTo(reachedX - 1, 1);
+        travelTo(reachedX - 1, 7);
         reachedX -= 1;
         CompleteLightLocalization_Direction_X();
         distX = 0;
@@ -585,7 +674,7 @@ public class Navigation {
       
       while (distY != 0) {
         travelTo( reachedX , reachedY - 2);
-        reachedY -= 2;
+        reachedY = reachedY - 2;
         CompleteLightLocalization_Direction_Y();
         distY += 2;
       } //end of while loop

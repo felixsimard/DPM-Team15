@@ -33,8 +33,8 @@ public class Display implements Runnable {
      
       
 //    lcd.drawString("US Distance: " + numberFormat.format(UltrasonicLocalizer.getDistance()), 0, 0);
-      lcd.drawString("X: " + numberFormat.format(position[0]), 0, 1);
-      lcd.drawString("Y: " + numberFormat.format(position[1]), 0, 2);
+      lcd.drawString("X: " + numberFormat.format(position[0] / 30.48), 0, 1);
+      lcd.drawString("Y: " + numberFormat.format(position[1] / 30.48), 0, 2);
       lcd.drawString("Theta: " + numberFormat.format(position[2]), 0, 3);
      
       
