@@ -119,7 +119,7 @@ else {
  /*
   * neither sensors detect a line initially
   */
-// if (reachedOneOne) {
+// if (reachedStartingPoint) {
  leftMotor.setSpeed(50);
  rightMotor.setSpeed(50);
  leftMotor.rotate(-200,true);

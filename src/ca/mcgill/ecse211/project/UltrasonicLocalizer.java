@@ -74,8 +74,8 @@ public class UltrasonicLocalizer implements Runnable {
     while (true) {
   
     readUsDistance();                           //this method fetches the distance read by the US sensor and stores it in the class variable called 'distance'
-   if (USLocalDone) {
-    if (distance <= 15) {    
+//   if (USLocalDone) {
+    if (distance <= 7) {    
       obstacleAvoidanceInProgress = true;
       OBJECT_DETECTED = true; 
       leftMotor.stop(true);     
@@ -91,7 +91,7 @@ public class UltrasonicLocalizer implements Runnable {
       obstacleAvoidanceInProgress = false;
       // travel to next point.
     } //end of inner if loop
-  } // end of outer if loop
+//  } // end of outer if loop
     Main.sleepFor(POLL_SLEEP_TIME);              
     }       //end of while loop
   } //end of run method

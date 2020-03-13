@@ -20,7 +20,7 @@ public class Resources {
   public static boolean OBJECT_DETECTED = false;
   public static boolean obstacleAvoidanceInProgress = false;
   public static boolean travelToNotCompleted = false;
-  public static boolean reachedOneOne = false;
+  public static boolean reachedStartingPoint = false;
   /**
    * Time for which the navigation thread sleeps for
    */

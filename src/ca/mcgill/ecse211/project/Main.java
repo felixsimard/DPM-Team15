@@ -64,7 +64,7 @@ public static void main(String[] args) {
         else   if (status == Button.ID_UP) {
           //Start light localization thread         
           LightLocalizer.localizeDuringUltrasonicLocalization();
-          reachedOneOne = true;
+     //    reachedStartingPoint = true;
         }
         else if (status == Button.ID_DOWN) {
           Navigation navigation_object = new Navigation();
