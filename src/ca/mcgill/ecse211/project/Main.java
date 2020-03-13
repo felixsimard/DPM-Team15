@@ -19,12 +19,18 @@ public class Main {
     
    
     // Start threads here
+     //------------------------------------TESTING START-------------------------------------//
+
+    //START THREADS
     
+    
+    //CALL TEST METHOD 
+    //------------------------------------TESTING END-------------------------------------//
     
     Button.waitForAnyPress();
     System.exit(0);
 
-
+   
   }
  
 
