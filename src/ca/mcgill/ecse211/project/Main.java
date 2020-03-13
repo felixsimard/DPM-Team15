@@ -22,7 +22,12 @@ public class Main {
      //------------------------------------TESTING START-------------------------------------//
 
     //START THREADS
-    
+    odometerThread.start(); 
+    leftMotor.setSpeed(MOTOR_LOW);
+    rightMotor.setSpeed(MOTOR_LOW);
+    leftMotor.rotate(360);
+    rightMotor.rotate(360);
+    Testing.test("OdoRotAccuracy");
     
     //CALL TEST METHOD 
     //------------------------------------TESTING END-------------------------------------//
