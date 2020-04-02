@@ -10,14 +10,24 @@ import java.util.ArrayList;
  */
 public class Reading implements Comparable {
 
+  /**
+   * Offset delta angle from initial orientation.
+   */
   private double deltaAngle;
+  
+  /**
+   * Measured distance returned from US sensor.
+   */
   private int distance;
 
+  /**
+   * Constructor
+   */
   public Reading(double deltaAngle, int distance) {
     this.deltaAngle = deltaAngle;
     this.distance = distance;
   }
-
+  
   public double getDeltaAngle() {
     return this.deltaAngle;
   }

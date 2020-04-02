@@ -116,11 +116,11 @@ public class UltrasonicSensor extends Thread {
     }
      */
 
-
   } 
 
   /**
    * Method to continuously check if our US sensor detects an object.
+   * @return void
    */
   public void detectObject() {
 
@@ -151,164 +151,6 @@ public class UltrasonicSensor extends Thread {
     return;
 
   }
-
-  /**
-   *    In this method, A rising edge is detected, its average theta is calculated,
-   *    we then continue rotating in the same direction until a falling edge is detected,
-   *    the average theta of the falling edge is then calculated. We then use the equation as explained
-   *    in the tutorial notes to calculate delta theta which is then added to the angle of rotation at which the
-   *    falling edge is detected ( new theta = delta theta + theta at which the falling edge is detected). We then
-   *    turn by new theta in the opposite direction so that the EV3 facing in the correct direction , which is the 0 degree axis.                       
-   *   
-       In short : Detect a Rising edge, continue rotating in the same direction, detect a falling edge, rotate the EV3 to correct direction ( 0 degree axis)
-   */
-  public void Rising_Edge () {     
-    (new Thread() {                         
-
-      public void run() {                        
-        leftMotor.setSpeed(ROTATION_SPEED);      
-        rightMotor.setSpeed(ROTATION_SPEED);       
-
-        while (distance < D - K) {               //Detect rising edge
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle1 = odometer.getXyt()[2];         // returns the angle rotated by EV3 from its starting position
-        Sound.beep();
-
-
-        while (distance < D + K) {      
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle2 = odometer.getXyt()[2];      // returns the angle rotated by EV3 from its starting position
-        Sound.beep();
-        avg_angle_12 = (angle1+angle2)/2.0;
-
-
-        while (distance > D + K) {             //Detect falling edge
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle3 = odometer.getXyt()[2];
-        Sound.beep();
-
-        while (distance > D - K) {     
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle4 = odometer.getXyt()[2];
-        Sound.beep();
-
-        avg_angle_34 = (angle3+angle4)/2.0;
-
-        if (avg_angle_34 > avg_angle_12) {
-          deltaTheta = 50 - (avg_angle_34+avg_angle_12) / 2.0;  //used
-        } else {
-          deltaTheta = 235 - (avg_angle_34+avg_angle_12) / 2.0;     
-        }
-
-        double newTheta = odometer.getXyt()[2] + deltaTheta;
-        turnBy(-(newTheta));
-
-        odometer.setTheta(0);    
-
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-
-      }        //end of run method
-    }).start();
-  } //end of rising edge method
-
-  //--------------------------------------------------------------------------------------
-
-  /**
-   *     
-   In this method, A falling edge is detected, its average theta is calculated,
-   we then continue rotating in the same direction until a rising edge is detected,
-   the average theta of the rising edge is then calculated. We then use the equation as explained
-   in the tutorial notes to calculate delta theta which is then added to the angle of rotation at which the
-   rising edge is detected ( new theta = delta theta + theta at which the rising edge is detected). We then
-   turn by new theta in the opposite direction so that the EV3 facing in the correct direction , which is the 0 degree axis.
-
-   // In short : Detect a Falling edge, continue rotating in the same direction, detect a rising edge, rotate the EV3 to correct direction ( 0 degree axis)
-   */
-  public void Falling_Edge () {      
-
-    (new Thread() {
-
-      public void run() {
-        leftMotor.setSpeed(ROTATION_SPEED);
-        rightMotor.setSpeed(ROTATION_SPEED);
-
-        while (distance > D + K) {              //Detect falling edge
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle3 = odometer.getXyt()[2];
-        Sound.beep();
-
-
-        while (distance > D - K) {      
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle4 = odometer.getXyt()[2];
-        Sound.beep();
-
-        avg_angle_34 = (angle3+angle4)/2.0;
-
-
-        while (distance < D - K) {             //Detect rising edge
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle1 = odometer.getXyt()[2];
-        Sound.beep();
-
-        while (distance < D + K) {     
-          leftMotor.forward();
-          rightMotor.backward();
-        }
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-        angle2 = odometer.getXyt()[2];
-        Sound.beep();
-
-        avg_angle_12 = (angle1+angle2)/2.0;
-
-        if (avg_angle_34 > avg_angle_12) {
-          deltaTheta = 52 - (avg_angle_34 + avg_angle_12) / 2.0;
-        } else {
-          deltaTheta = 230 - ((avg_angle_34 + avg_angle_12)) / 2.0; 
-        }
-        double newTheta = odometer.getXyt()[2] + deltaTheta;
-        turnBy(-(newTheta));
-
-        odometer.setTheta(0);
-
-        leftMotor.stop(true);
-        rightMotor.stop(false);
-
-      } // end of run method
-    }).start();
-
-  }     //end of Falling edge method
-
 
   /**
    * Returns the distance between the US sensor and an obstacle in cm.
