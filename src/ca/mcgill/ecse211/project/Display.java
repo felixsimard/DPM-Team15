@@ -7,14 +7,28 @@ import java.text.DecimalFormat;
  */
 public class Display implements Runnable {
   
-  // Empty Constructor
+  /**
+   * Constructor
+   */
   public Display () {
   }
-  
+  /**
+   * This double array stores the values of x,y and theta values of the odometer.
+   * These values are what is displayed onto the screen of the robot
+   */
   private double[] position;
+ /**
+  * Used in determining when the display thread should go to sleep
+  */
   private static final long DISPLAY_PERIOD = 25;
+  /**
+   * Also used in determining when the display thread should go to sleep
+   */
   private long timeout = Long.MAX_VALUE;
 //----------------------------------------------------------------------------------------------
+  /**
+   * This method is responsible for displaying the x,y, and theta values of the odometer onto the screen of the robot
+   */
   public void run() {
 
     lcd.clear();
@@ -32,7 +46,7 @@ public class Display implements Runnable {
       DecimalFormat numberFormat = new DecimalFormat("######0.00");
      
       
-//    lcd.drawString("US Distance: " + numberFormat.format(UltrasonicLocalizer.getDistance()), 0, 0);
+      lcd.drawString("US Distance: " + numberFormat.format(Sensors.getDistance()), 0, 0);
       lcd.drawString("X: " + numberFormat.format(position[0] / 30.48), 0, 1);
       lcd.drawString("Y: " + numberFormat.format(position[1] / 30.48), 0, 2);
       lcd.drawString("Theta: " + numberFormat.format(position[2]), 0, 3);

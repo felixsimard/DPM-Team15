@@ -255,6 +255,9 @@ public class Odometer extends Thread implements Runnable {
       lock.unlock();
     }
   }
+  /**
+   * The odometer is reset and theta is set to 0.
+   */
   public void resetOdo() {
    Main.sleepFor(40);
     lock.lock();

@@ -1,300 +1,171 @@
 package ca.mcgill.ecse211.project;
 
-
-
-import lejos.hardware.Sound;
-import lejos.utility.Timer;
-import lejos.utility.TimerListener;
-
 import static ca.mcgill.ecse211.project.Resources.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
-public class UltrasonicLocalizer implements Runnable {
+/**
+ * Class to manage and record values of the ultrasonic sensor.
+ * This class is also responsible for performing Ultrasonic Localization
+ */
+public class UltrasonicLocalizer {
   
   /**
-   * distance calculated by the Ultrasound sensor
+   *  ArrayList to store all the readings object
    */
-  private  int distance;     
-  
+  public static  ArrayList<Reading> readings = new ArrayList<Reading>();
+
   /**
    * Buffer (array) to store US samples. Declared as an instance variable to avoid creating a new
    * array each time {@code readUsSample()} is called.
    */
-  private float[] usData = new float[usSensor.sampleSize()];                
- 
-  
-  /**
-   * The Localization type.
-   */
-  private String Localization_type;            
-  
-  /**
-   * Noise margin in cm
-   */
-  private final static double K = 2;         
-  
-  
-  /**
-   * the point at which the measured distance falls above D - K
-   */
-  private static double angle1=0;
-  /**
-   * the point at which the measured distance falls above D + K
-   */
-  private static double angle2=0;
-  /**
-   * average of angle1 and angle2
-   */
-  private static double avg_angle_12;
-  /**
-   * the point at which the measured distance falls below D + K
-   */
-  private static double angle3=0;
-  /**
-   * the point at which the measured distance falls below D - K
-   */
-  private static double angle4=0;
-  /**
-   * average of angle3 and angle4
-   */
-  private static double avg_angle_34;
-  /**
-   * angle calculated  by the equation given in the tutorial notes, this angle is used to correct the direction of the EV3
-   */
-  private static double deltaTheta;               
-  
-  
-  /**
-   * Constructor
-   */
-  public UltrasonicLocalizer(String type) {
-  this.Localization_type = type;
-  }
- //-------------------------------------------------------------------------------------------------------------------------
-  public void run() {
-    while (true) {
-  
-    readUsDistance();                           //this method fetches the distance read by the US sensor and stores it in the class variable called 'distance'
-//   if (USLocalDone) {
-    if (distance <= 7) {    
-      obstacleAvoidanceInProgress = true;
-      OBJECT_DETECTED = true; 
-      leftMotor.stop(true);     
-      rightMotor.stop(false);
-      turnBy(90);
-      Navigation.moveStraightFor(20);
-      turnBy(-90);
-      Navigation.moveStraightFor(10);
-      turnBy(-90);
-      Navigation.moveStraightFor(20);
-      turnBy(90);
-      OBJECT_DETECTED = false;
-      obstacleAvoidanceInProgress = false;
-      // travel to next point.
-    } //end of inner if loop
-//  } // end of outer if loop
-    Main.sleepFor(POLL_SLEEP_TIME);              
-    }       //end of while loop
-  } //end of run method
-  //-------------------------------------------------------------------------------------------------------------------------
-  /**
-   *    In this method, A rising edge is detected, its average theta is calculated,
-   *    we then continue rotating in the same direction until a falling edge is etected,
-   *    the average theta of the falling edge is then calculated. We then use the equation as explained
-   *    in the tutorial notes to calculate delta theta which is then added to the angle of rotation at which the
-   *    falling edge is detected ( new theta = delta theta + theta at which the falling edge is detected). We then
-   *    turn by new theta in the opposite direction so that the EV3 facing in the correct direction , which is the 0 degree axis.                       
-   *   
-       In short : Detect a Rising edge, continue rotating in the same direction, detect a falling edge, rotate the EV3 to correct direction ( 0 degree axis)
-   */
-  public void Rising_Edge () {     
-                           
-    leftMotor.setSpeed(ROTATION_SPEED);      
-    rightMotor.setSpeed(ROTATION_SPEED);       
-                                               
-    while (distance < D - K) {               //Detect rising edge
-      leftMotor.forward();
-      rightMotor.backward();
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-     angle1 = odometer.getXyt()[2];         // returns the angle rotated by EV3 from its starting position
-     Sound.beep();
-    
-    
-    while (distance < D + K) {      
-      leftMotor.forward();
-      rightMotor.backward();
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-     angle2 = odometer.getXyt()[2];      // returns the angle rotated by EV3 from its starting position
-     Sound.beep();
-     avg_angle_12 = (angle1+angle2)/2.0;
-    
-    
-    while (distance > D + K) {             //Detect falling edge
-      leftMotor.forward();
-      rightMotor.backward();
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-    angle3 = odometer.getXyt()[2];
-    Sound.beep();
-    
-    while (distance > D - K) {     
-      leftMotor.forward();
-      rightMotor.backward();
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-    angle4 = odometer.getXyt()[2];
-    Sound.beep();
-    
-    avg_angle_34 = (angle3+angle4)/2.0;
-    
-    if (avg_angle_34 > avg_angle_12) {
-      deltaTheta = 50 - (avg_angle_34+avg_angle_12) / 2.0;  //used
-    } else {
-      deltaTheta = 235 - (avg_angle_34+avg_angle_12) / 2.0;     
-    }
            
-    double newTheta = odometer.getXyt()[2] + deltaTheta;
-    turnBy(-(newTheta));
-    
-    odometer.setTheta(0);       //EV3 informed that it is on the 0 degree axis 
-    
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-    
- //   LightLocalizer.localizeDuringUltrasonicLocalization();  // go to (1,1) and face 0 degree axis
-   
-  } //end of rising edge method
-  
-  //--------------------------------------------------------------------------------------
+  /**
+   * To hold the x, y, t values of the odometer
+   */
+  private double[] position;
 
   /**
-   *     
-   In this method, A falling edge is detected, its average theta is calculated,
-   we then continue rotating in the same direction until a rising edge is detected,
-   the average theta of the rising edge is then calculated. We then use the equation as explained
-   in the tutorial notes to calculate delta theta which is then added to the angle of rotation at which the
-   rising edge is detected ( new theta = delta theta + theta at which the rising edge is detected). We then
-   turn by new theta in the opposite direction so that the EV3 facing in the correct direction , which is the 0 degree axis.
-    
-   // In short : Detect a Falling edge, continue rotating in the same direction, detect a rising edge, rotate the EV3 to correct direction ( 0 degree axis)
+   * ffset angle, values between 0-359
    */
-  public void Falling_Edge () {      
-    leftMotor.setSpeed(ROTATION_SPEED);
-    rightMotor.setSpeed(ROTATION_SPEED);
-    
-    while (distance > D + K) {              //Detect falling edge
+  private double deltaAngle;
+
+  /**
+   * Cummulative offset angle, values from 0-inf (used for US localization)
+   */
+  private double totalDeltaAngle;
+
+  /**
+   * Reading object which will store the minimum distance and the offset angle associated to it
+   */
+  private Reading minReading;
+
+
+  /**
+   * Constructor.
+   */
+  public UltrasonicLocalizer() {
+  }
+
+
+  /**
+   * Method to perform the corner US localization. 
+   * Essentially, sweep 360 degrees, record all distances read by the US sensor. Point the EV3 towards the minimal distance.
+   * Rotate 90 degrees, check if still facing a wall, if so rotate another 90 degrees, if not, then facing the 0 degree axis.
+   * 
+   * Then, rotate 45 degrees, compute distance required to travel to get to the "1,1" mark using trigonometry.
+   * Travel there, rotate -45 degrees. Done. Light localize afterwards for greater accuracy.
+   */
+  public void usLocalize() {
+    Reading intialSweep = sweep();
+
+    // Now that we have exited the main loop, cut the motors
+    stopMotors();
+
+    Main.sleepFor(GENERAL_SLEEP);
+
+    // Orient the robot in the direction pointing towards the minimum distance
+    Navigation.turnBy(intialSweep.getDeltaAngle());
+
+    Main.sleepFor(GENERAL_SLEEP);
+
+    // Rotate the robot about 90 degrees
+    Navigation.turnBy(RIGHT_ANGLE);
+
+    // Now, here the logic of the following:
+    // after having turned 90 degrees in the previous step, if the next US sensor reading is large, then the robot must
+    // be oriented towards the 0 degree line. If not, then another clockwise 90 degree rotation must be made
+
+    // Start by taking the average of two readings for accuracy
+    int dist = Sensors.getDistance();
+    if(dist < DIST_THRESHOLD) { // then we are facing against the other wall, at a very close similar minimum distance
+      Navigation.turnBy(RIGHT_ANGLE);
+      Main.sleepFor(GENERAL_SLEEP);
+      stopMotors();
+    } else { // if not, then we are currently facing the 0 degree line!
+      stopMotors();  
+    }
+
+    Main.sleepFor(GENERAL_SLEEP); 
+
+    // Note: at this point, the robot should be oriented towards the 0 degrees line (along the defined y-axis)
+
+    // Angle at around 45 degrees away from the y-axis
+    Navigation.turnBy(HALF_RIGHT_ANGLE);
+
+    Main.sleepFor(GENERAL_SLEEP);
+
+    // Get to (1, 1) point on board
+    double distanceToTravel = computeDistanceToOneOne(minReading.getDistance());
+    Navigation.moveStraightForWithoutStopping(distanceToTravel);
+
+    // Now orient wheel towards 0 degrees
+    Navigation.turnBy(-HALF_RIGHT_ANGLE);
+
+    // Init odometer at (1, 1)
+    odometer.setXyt(TILE_SIZE_cm,TILE_SIZE_cm, 0);
+
+    // done corner localization
+    DONE_CORNER_LOCALIZATION = true;
+
+    // We should be all good at this point!
+  }
+
+  /**
+   * Method to perform a 360 degrees sweep and record each distance readings in a Reading.java object.
+   * Used in the usLocalize() method.
+   */
+  public Reading sweep() {
+
+    while(totalDeltaAngle <= (DEGREES_MAX)) { // use the <= 360 degree angle condition if it works
+
+      leftMotor.setSpeed(MOTOR_LOW);
+      rightMotor.setSpeed(MOTOR_LOW);
       leftMotor.forward();
       rightMotor.backward();
+
+      // Setup inputs for Reading object creation
+      int d = Sensors.getDistance();
+
+      // Retrieve the angle
+      position = odometer.getXyt();
+      deltaAngle = position[2];
+      totalDeltaAngle = position[3];
+
+      // Initialize a Reading object
+      Reading r = new Reading(deltaAngle, d);
+      readings.add(r); // append reading data to local arraylist
+
+      minReading = findMinDistance(readings); // find the minimum reading out of the arraylist of Reading objects
+
     }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-     angle3 = odometer.getXyt()[2];
-     Sound.beep();
-    
-    
-    while (distance > D - K) {      
-      leftMotor.forward();
-      rightMotor.backward();
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-     angle4 = odometer.getXyt()[2];
-     Sound.beep();
-     
-     avg_angle_34 = (angle3+angle4)/2.0;
-    
-    
-    while (distance < D - K) {             //Detect rising edge
-      leftMotor.forward();
-      rightMotor.backward();
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-    angle1 = odometer.getXyt()[2];
-    Sound.beep();
-    
-    while (distance < D + K) {     
-      leftMotor.forward();
-      rightMotor.backward();
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-    angle2 = odometer.getXyt()[2];
-    Sound.beep();
-    
-    avg_angle_12 = (angle1+angle2)/2.0;
-    
-    if (avg_angle_34 > avg_angle_12) {
-      deltaTheta = 52 - (avg_angle_34 + avg_angle_12) / 2.0;
-    } else {
-      deltaTheta = 230 - ((avg_angle_34 + avg_angle_12)) / 2.0;     //used
-    }
-    double newTheta = odometer.getXyt()[2] + deltaTheta;
-    turnBy(-(newTheta));
-    
-    odometer.setTheta(0);          //EV3 informed that it is on the 0 degree axis 
-   
-    leftMotor.stop(true);
-    rightMotor.stop(false);   
-    
-//    LightLocalizer.localizeDuringUltrasonicLocalization();  // go to (1,1) and face 0 degree axis
-    
-  }     //end of Falling edge method
+
+    return minReading;
+  }
+
+  /**
+   * Method to compute the distance remaining to travel by the robot to the (1, 1) point
+   */
+  public double computeDistanceToOneOne(int minDistance) {
+    double hyp = ( (TILE_SIZE_cm - (minDistance + SENSOR_TO_CENTER_DIST))/ ( Math.sin( PI / 4 )) );
+    return hyp;
+  }
+
+  /**
+   * Method to find the minimum reading out of the arraylist of Reading objects.
+   * Idea is simply to sort the arraylist by distance attribute and then pick the first element in the list.
+   */
+  public Reading findMinDistance(ArrayList<Reading> readings) {
+    Collections.sort(readings);
+    return readings.get(0);
+  }
+
+  /**
+   * Stops both the left wheel motor and the right wheel motor
+   */
+  public void stopMotors() {
+    leftMotor.stop();
+    rightMotor.stop();
+  }
   
-  //------------------------------------------------------------------------------------------------------------------------- 
-  /**
-   * Returns the distance between the US sensor and an obstacle in cm.
-   * 
-   * @return the distance between the US sensor and an obstacle in cm
-   */
-  public int readUsDistance() {         
-    usSensor.fetchSample(usData, 0);  
-    // extract from buffer, convert to cm, cast to int, and filter
-    return distance = ((int) (usData[0] * 100.0));
-  }
-  //-------------------------------------------------------------------------------------------------------------------------
-  /**
-   * 
-   * @return Returns the distance calculated by the Ultrasonic sensor
-   */
-  public  int getDistance() {     
-    return distance;
-  }
-  //-------------------------------------------------------------------------------------------------------------------------
-  /**
-   * Turns the robot by a specified angle. Note that this method is different from {@code Navigation.turnTo()}. For
-   * example, if the robot is facing 90 degrees, calling {@code turnBy(90)} will make the robot turn to 180 degrees, but
-   * calling {@code Navigation.turnTo(90)} should do nothing (since the robot is already at 90 degrees).
-   * 
-   * @param angle the angle by which to turn, in degrees
-   */
-  public static void turnBy(double angle) {
-    leftMotor.rotate(convertAngle(angle), true);
-    rightMotor.rotate(-convertAngle(angle), false);
-  }
-  //------------------------------------------------------------------------------------------------------------------------- 
-  /**
-   * Converts input angle to the total rotation of each wheel needed to rotate the robot by that angle.
-   * 
-   * @param angle the input angle
-   * @return the wheel rotations necessary to rotate the robot by the angle
-   */
-  public static int convertAngle(double angle) {
-    return convertDistance(Math.PI * BASE_WIDTH * angle / 360.0);
-  }
-  //-------------------------------------------------------------------------------------------------------------------------
-  /**
-   * Converts input distance to the total rotation of each wheel needed to cover that distance.
-   * 
-   * @param distance the input distance
-   * @return the wheel rotations necessary to cover the distance
-   */
-  public static int convertDistance(double distance) {
-    return (int) ((180.0 * distance) / (Math.PI * WHEEL_RADIUS));
-  }
-}
+} //end of UltrasonicLocalizer class
