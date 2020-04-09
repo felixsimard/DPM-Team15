@@ -51,7 +51,7 @@ private static float colourData_front[] =  new float [colourSensor_front_SampleP
 /**
  * Variable to store the value returned by the front colour sensor
  */
-private static int RGBdata[] = new int[2];
+public static int RGBdata[] = new int[2];
 // variables for the ultrasonic sensor
 /**
  * Sample provider for the ultrasonic sensor
@@ -64,7 +64,7 @@ private static float[] usData = new float[usSensor.sampleSize()];
 /**
  * variable to store the value returned by the ultrasonic sensor
  */
-private static int distance;   
+public static int distance;   
 
 //------------------------------------------------------------------------------------------------
 /**

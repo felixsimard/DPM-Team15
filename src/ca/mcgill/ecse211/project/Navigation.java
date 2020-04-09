@@ -24,11 +24,13 @@ public class Navigation {
    */
   double yCurrent_CM;
   /**
-   * the current clockwise angle of the EV3 from the 0 axis
+   * the current clockwise angle of the EV3 from the 0 axis, value set in travelTo(double x,double y)
    */
   double thetaCurrent_RAD; 
- 
-  static double thetacurrent_RAD_Localizer;
+  /**
+   * the current clockwise angle of the EV3 from the 0 axis, value set in turnTo_LightLocalizer(double angle_RAD)
+   */
+  static double thetaCurrent_RAD_Localizer;
   /**
    *  the displacement change required in the x-axis to reach our desired destination
    */
@@ -162,8 +164,8 @@ public class Navigation {
    */
   public static void turnTo_LightLocalizer(double angle_RAD) {           //has to turn by minimal angle
     
-    thetacurrent_RAD_Localizer = odometer.getXyt()[2] * RADS_PER_1DEG;
-    double deltaT = angle_RAD*(180/Math.PI) -  thetacurrent_RAD_Localizer*(180/Math.PI);
+    thetaCurrent_RAD_Localizer = odometer.getXyt()[2] * RADS_PER_1DEG;
+    double deltaT = angle_RAD*(180/Math.PI) -  thetaCurrent_RAD_Localizer*(180/Math.PI);
     
     if (deltaT >= 0 && deltaT <= 180 ) {
       turnBy(deltaT);          

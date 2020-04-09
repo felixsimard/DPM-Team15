@@ -26,7 +26,7 @@ public class UltrasonicLocalizer {
   private double[] position;
 
   /**
-   * ffset angle, values between 0-359
+   * Offset angle, values between 0-359
    */
   private double deltaAngle;
 

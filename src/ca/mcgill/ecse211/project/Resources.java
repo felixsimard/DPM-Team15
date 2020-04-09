@@ -236,7 +236,8 @@ public static final int COLOUR_DETECTOR_SLEEP = 50;
 */
 public static int xDest;
 /**
-* 
+* The y coordinate of the desired destination of the robot. 
+* This variable is used in the completeTravelTo() method in the Navigation class.
 */
 public static int yDest;
 
