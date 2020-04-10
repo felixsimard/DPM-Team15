@@ -22,12 +22,21 @@ import static ca.mcgill.ecse211.project.Resources.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+/*
+ * The Testing class is the draft class used by the testing manager before the COVID-19 outbreak. This class is to be used for tests that 
+ * require many readings from sensors, odometer, etc. 
+ * This class contains methods that output data into a csv files, by creating tables. This file can then be downloaded from the EV3 brick 
+ * and opened as an Excel spreadsheet to be analysed. 
+ * This class is used by the Main class. 
+ * Tests are classified by test names, which output different tables based on the data required by the test. 
+ */
 public class Testing {
   
   public static final String Test=""; 
 
+//-------------------------------Uncomment for color sensor testing start-------------------------------//
 //  public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S2);
+//-------------------------------Uncomment for color sensor testing stop-------------------------------//
   public static final TextLCD TEXT_LCD = LocalEV3.get().getTextLCD();
 
   private ArrayList<ArrayList<Double>> distanceReadings = new ArrayList<ArrayList<Double>>();
@@ -47,8 +56,6 @@ public class Testing {
    * usSensorCurve: to trace the outline of obstacle when rotating 
    * usSensorDistance: to detect distance to obstacle when moving towards it 
    * OdoRotAccuracy: check theta when car rotates 360 deg 
-   * 
-   * USLocalization:  
    */
   /**
    * Method called when testing 
@@ -56,7 +63,9 @@ public class Testing {
    * 1. Start the necessary threads 
    * 2. Start motors if needed
    * 3. Call the test method with input as the name of the test 
-   * @param test
+   * @param test test name used by the main class 
+   * @return void 
+   * 
    */
   public static void test(String test) {
     
@@ -65,7 +74,8 @@ public class Testing {
     TEXT_LCD.drawString("Press button to start", 0, 1);
     Button.waitForAnyPress();                                   
     TEXT_LCD.clear();
-  //---------------------TEST FOR TRACING OF THE US SENSOR DATA FOR OBSTACLE ---------------//
+  
+    //---------------------TEST FOR TRACING OF THE US SENSOR DATA FOR OBSTACLE ---------------//
     if (test.equals("usSensorCurve")) {
        
           int testIndex = 0;
@@ -125,6 +135,7 @@ public class Testing {
    
       
     }
+   
     //---------------------TEST FOR sensor moving towards obstacle ---------------//
     
     else if(test.equals("usSensorDistance")) {
@@ -199,7 +210,7 @@ public class Testing {
       TEXT_LCD.clear();
      // CREATE CSV  
      file = createfile("OdoRotAccuracy.csv");
-  try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(file))) {
+      try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(file))) {
         if (! file.exists()) {
             file.createNewFile();
         }
@@ -279,14 +290,17 @@ public class Testing {
     }
     
   }
-  
+  /**
+   * This method is used to calibrate the color sensor
+   */
   public void calibrate()  {
     int testIndex = 0;
   
+    //-------------------------------Uncomment for color sensor testing start-------------------------------//
 //      colorReadings.add(new ArrayList<Double>());
 //      colorReadings.add(new ArrayList<Double>());
 //      colorReadings.add(new ArrayList<Double>());
-    
+  //-------------------------------Uncomment for color sensor testing end-------------------------------//
     while(testIndex < 10) {
      
 
@@ -295,11 +309,12 @@ public class Testing {
       Button.waitForAnyPress();
       TEXT_LCD.clear();
       ArrayList<Double> rgbReading = getColorData();
-      
+
+    //-------------------------------Uncomment for color sensor testing start-------------------------------//
 //      colorReadings.get(0).add(new Double(rgbReading.get(0)));
 //      colorReadings.get(1).add(new Double(rgbReading.get(1)));
 //      colorReadings.get(2).add(new Double(rgbReading.get(2)));
-      
+    //-------------------------------Uncomment for color sensor testing stop-------------------------------// 
       System.out.println("Reading: " + rgbReading);
       
     testData[testIndex] = (testIndex+1) + ", " + rgbReading.get(0).toString()+ ", " +
@@ -310,22 +325,31 @@ public class Testing {
     }
     
     createCSV(testData);
-    
+  //-------------------------------Uncomment for color sensor testing start-------------------------------//
     //System.out.println("Output: " + colorReadings);
+  //-------------------------------Uncomment for color sensor testing stop-------------------------------//
    
   }
 
-
+/**
+ * This method is used to get the Color data from the color sensor 
+ * 
+ * @return the Array list describing the [R,G,B} values read by the color sensor
+ */
   public  ArrayList<Double> getColorData() {
     colorData =  ColorSensor.getRGBdata();
     ArrayList<Double> out = new ArrayList<Double>();
-    // line below does not work, simply need to get RGB from color sensor as an array like: [R, G, B]
-    // works now
+ 
+   
     out.add(new Double(colorData[0]));
     out.add(new Double(colorData[1]));
     out.add(new Double(colorData[2]));
     return out;
   }
+  /**
+   * This method gets the distance read by the ultasonic sensor 
+   * @return array list describing the distance read by the ulrasonic sensor
+   */
   public static ArrayList<Double> getDistance(){
     
     int data=USSensor.readUsDistance(); 
@@ -337,14 +361,19 @@ public class Testing {
   
   /**
    *  checks if file has been created successfully
-   * @return
+   * @param filename
+   * @return new File 
    */
   public static File createfile(String fileName) {
       return new File(fileName);
   }
 
 //-------------------------------Setting up a CSV File----------------------------------------//
-  
+  /**
+   * Method that creates the CSV file for the color sensor testing data (color sensor calibration) 
+   * @param arr the array containing the data from test 
+   * @return void
+   */
   public static void createCSV(String[] arr) {
   file = createfile("color_sensor.csv");
   try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(file))) {
@@ -373,16 +402,20 @@ public class Testing {
     }
   }
 //--------------------------------------------------------------------------------------------//
+/**
+ * Method used to test the magnitude of motor drift with respect to the odometer of the robot
+ * @return void 
+ */
 public static void testMotorDisp() {
-  int testIndex = 0;  
-  double idealAngle=45; 
-  double error=Math.abs(odometer.getXyt()[2]-idealAngle); 
-testData[testIndex] = (testIndex+1) + ", " + odometer.getXyt()[0]+ ", " +
+    int testIndex = 0;  
+    double idealAngle=45; 
+    double error=Math.abs(odometer.getXyt()[2]-idealAngle); 
+    testData[testIndex] = (testIndex+1) + ", " + odometer.getXyt()[0]+ ", " +
     odometer.getXyt()[1]+", "+ odometer.getXyt()[2] + error ;
-
-  Button.waitForAnyPress();                                   
-  TEXT_LCD.clear();
-  file = createfile("testMotorDisp.csv");
+  
+    Button.waitForAnyPress();                                   
+    TEXT_LCD.clear();
+    file = createfile("testMotorDisp.csv");
   try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(file))) {
         if (! file.exists()) {
             file.createNewFile();
