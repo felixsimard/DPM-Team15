@@ -29,16 +29,24 @@ public class StrandedVehicle {
     
   }
   /**
-   * Firstly, the robot would grab the vertical pin, the robot would then reverse for a 
-   * fixed distance such that regardless of the position from which the robot grabbed the vertical pin, 
-   * once the robot reverses, the stranded vehicle straightens. The robot will then let go of the vertical pin.
+   * In this method the robot would hook onto the vertical pin of the stranded vehicle and perform a reverse
+   * maneuver such that regardless of the position from which the robot hooked onto the vertical pin, 
+   * once the robot reverses, the stranded vehicle straightens and is aligned with the
+   * robot. The robot will then move forward for a fixed distance letting go of the vertical pin.
+   * 
+   * Keep in mind that the grabbing mechanism is just a hook. This hook is directly below the colour sensor, not only that,
+   * this hook is shorter in length than the colour sensor. So once the vertical pin is detected, the robot needs to turn 
+   * to the left for a fixed distance, move forward for a fixed distance, then turn to the right for a fixed distance so that
+   * the robot is once again facing the vertical pin. The robot will then perform a reverse maneuver during which the robot hooks
+   * onto the vertical pin. Due to this reverse maneuver the stranded vehicle will straighten and be aligned with the robot.
+   *
    */
   public static void GrabVerticalPin() {
     
   }
   
   /**
-   * Once the stranded vehicle has been straightened, The robot performs a 180-degree turn.
+   * Once the stranded vehicle has been straightened, The robot performs a 180-degree anticlockwise turn.
    * The robot then reverses for a fixed distance such that the lifting components of the robot connect 
    * to the stranded vehicle. The robot then lifts the stranded vehicle (Using the motor attached to the lifting mechanism).
    */
