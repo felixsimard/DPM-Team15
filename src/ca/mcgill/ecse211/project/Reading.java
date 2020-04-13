@@ -43,14 +43,14 @@ public class Reading implements Comparable {
   }
 /**
  * the angle from the initial orientation of the robot is set to deltaAngle 
- * @param deltaAngle
+ * @param deltaAngle is the angle returned from the odometer (in degrees)
  */
   public void setDeltaAngle(double deltaAngle) {
     this.deltaAngle = deltaAngle;
   }
   /**
    * the distance returned from the US sensor for a specific angle from the initial orientation of the robot is set to distance
-   * @param distance
+   * @param distance is the value returned from the US sensor (in cm)
    */
   public void setDistances(int distance) {
     this.distance = distance;

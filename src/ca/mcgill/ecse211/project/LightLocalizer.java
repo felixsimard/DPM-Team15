@@ -2,9 +2,7 @@ package ca.mcgill.ecse211.project;
 
 import static ca.mcgill.ecse211.project.Resources.*;
 /**
- * 
- * @author Omar Noor
- *This class contains methods that are responsible for performing light localization
+ *This class contains methods that are responsible for performing light localization at the current position of the robot
  */
 public class LightLocalizer {
 /**
